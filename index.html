@@ -46,5 +46,20 @@
   <img src="image4.jpg" alt="Photo 4">
 </div>
 
+  <iframe id="carouselFrame" 
+        src="https://hurodigital.github.io/gallery_sample.html" 
+        width="100%" 
+        style="border:none; overflow:hidden;"></iframe>
+
+<script>
+  // Listen for height messages from the iframe
+  window.addEventListener("message", function(event) {
+    if (event.data.type === "setHeight") {
+      document.getElementById("carouselFrame").style.height = event.data.height + "px";
+    }
+  });
+</script>
+
 </body>
 </html>
+
