@@ -2,42 +2,67 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Image Carousel & Video</title>
+  <title>Image Carousel</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f8f8f8;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
+      height: 100vh;
     }
-    iframe {
-      max-width: 100%;
-      border: none;
-    }
-    .section {
+
+    .carousel {
+      position: relative;
       max-width: 800px;
       width: 100%;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      border-radius: 8px;
       overflow: hidden;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
+
+    .carousel img {
+      width: 100%;
+      display: none;
+    }
+
+    .carousel img.active {
+      display: block;
+    }
+
+    .prev, .next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: white;
+      background: rgba(0,0,0,0.4);
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border: none;
+      outline: none;
+    }
+
+    .prev { left: 10px; }
+    .next { right: 10px; }
   </style>
 </head>
 <body>
 
-  <h1>Gallery & Video Showcase</h1>
+<div class="carousel">
+  <img src="images/image1.jpg" class="active">
+  <img src="images/image2.jpg">
+  <img src="images/image3.jpg">
+  <img src="images/image4.jpg">
 
-  <!-- Carousel Section -->
-  <div class="section">
-    <iframe id="carouselFrame" 
-            src="https://hurodigital.github.io/gallery_sample.html" 
-            width="100%" 
-            style="border:none; overflow:hidden;"></iframe>
-  </div>
+  <button class="prev">&#10094;</button>
+  <button class="next">&#10095;</button>
+</div>
+
+</div>
 
   <!-- YouTube Video Section -->
   <div class="section">
@@ -50,14 +75,27 @@
             allowfullscreen></iframe>
   </div>
 
-  <script>
-    // Listen for height messages from the carousel iframe
-    window.addEventListener("message", function(event) {
-      if (event.data.type === "setHeight") {
-        document.getElementById("carouselFrame").style.height = event.data.height + "px";
-      }
-    });
-  </script>
+<script>
+  const images = document.querySelectorAll('.carousel img');
+  let currentIndex = 0;
+
+  document.querySelector('.next').addEventListener('click', () => {
+    images[currentIndex].classList.remove('active');
+    currentIndex = (currentIndex + 1) % images.length;
+    images[currentIndex].classList.add('active');
+  });
+
+  document.querySelector('.prev').addEventListener('click', () => {
+    images[currentIndex].classList.remove('active');
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    images[currentIndex].classList.add('active');
+  });
+
+  // Optional auto-slide every 3 seconds
+  setInterval(() => {
+    document.querySelector('.next').click();
+  }, 3000);
+</script>
 
 </body>
 </html>
