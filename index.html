@@ -3,49 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sample Photo Gallery</title>
+<title>Responsive Image Carousel</title>
 <style>
   body {
     font-family: Arial, sans-serif;
+    background: #f8f8f8;
     margin: 0;
-    padding: 20px;
-    background: #f5f5f5;
-    text-align: center;
-  }
-  h1 {
-    color: #333;
-  }
-  .gallery {
+    padding: 0;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+    align-items: center;
+    height: 100vh;
   }
-  .gallery img {
-    max-width: 300px;
-    width: 100%;
-    height: auto;
+
+  .carousel {
+    position: relative;
+    max-width: 90%;
+    width: 800px;
+    overflow: hidden;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    background: #000;
   }
-  .gallery img:hover {
-    transform: scale(1.05);
+
+  .carousel img {
+    width: 100%;
+    display: none;
+  }
+
+  .carousel img.active {
+    display: block;
+  }
+
+  .prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    color: white;
+    background: rgba(0,0,0,0.4);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    z-index: 10;
+  }
+
+  .prev { left: 10px; }
+  .next { right: 10px; }
+
+  @media (max-width: 600px) {
+    .prev, .next {
+      font-size: 1.5rem;
+      padding: 0.4rem 0.8rem;
+    }
   }
 </style>
 </head>
 <body>
 
-<h1>Sample Photo Gallery</h1>
-
-<div class="gallery">
-  <img src="images/image1.jpg" alt="Photo 1">
+<div class="carousel" id="carousel">
+  <img src="images/image1.jpg" class="active" alt="Photo 1">
   <img src="images/image2.jpg" alt="Photo 2">
   <img src="images/image3.jpg" alt="Photo 3">
   <img src="images/image4.jpg" alt="Photo 4">
+
+  <button class="prev">&#10094;</button>
+  <button class="next">&#10095;</button>
 </div>
+
+<script>
+  const images = document.querySelectorAll('.carousel img');
+  let currentIndex = 0;
+  let startX = 0;
+
+  function showImage(index) {
+    images[currentIndex].classList.remove('active');
+    currentIndex = (index + images.length) % images.length;
+    images[currentIndex].classList.add('active');
+  }
+
+  document.querySelector('.next').addEventListener('click', () => showImage(currentIndex + 1));
+  document.querySelector('.prev').addEventListener('click', () => showImage(currentIndex - 1));
+
+  // Auto-slide every 3 seconds
+  setInterval(() => showImage(currentIndex + 1), 3000);
+
+  // Swipe support for mobile
+  const carousel = document.getElementById('carousel');
+  carousel.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+  });
+
+  carousel.addEventListener('touchend', e => {
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+    if (diff > 50) {
+      showImage(currentIndex + 1); // Swipe left → next
+    } else if (diff < -50) {
+      showImage(currentIndex - 1); // Swipe right → prev
+    }
+  });
+</script>
 
 </body>
 </html>
-
