@@ -2,87 +2,62 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Image Carousel</title>
+  <title>Image Carousel & Video</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f8f8f8;
       margin: 0;
-      padding: 0;
+      padding: 20px;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      height: 100vh;
     }
-
-    .carousel {
-      position: relative;
+    iframe {
+      max-width: 100%;
+      border: none;
+    }
+    .section {
       max-width: 800px;
       width: 100%;
-      overflow: hidden;
-      border-radius: 8px;
+      margin-bottom: 30px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
     }
-
-    .carousel img {
-      width: 100%;
-      display: none;
-    }
-
-    .carousel img.active {
-      display: block;
-    }
-
-    .prev, .next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 2rem;
-      color: white;
-      background: rgba(0,0,0,0.4);
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      border: none;
-      outline: none;
-    }
-
-    .prev { left: 10px; }
-    .next { right: 10px; }
   </style>
 </head>
 <body>
 
-<div class="carousel">
-  <img src="images/image1.jpg" class="active">
-  <img src="images/image2.jpg">
-  <img src="images/image3.jpg">
-  <img src="images/image4.jpg">
+  <h1>Gallery & Video Showcase</h1>
 
-  <button class="prev">&#10094;</button>
-  <button class="next">&#10095;</button>
-</div>
+  <!-- Carousel Section -->
+  <div class="section">
+    <iframe id="carouselFrame" 
+            src="https://hurodigital.github.io/gallery_sample.html" 
+            width="100%" 
+            style="border:none; overflow:hidden;"></iframe>
+  </div>
 
-<script>
-  const images = document.querySelectorAll('.carousel img');
-  let currentIndex = 0;
+  <!-- YouTube Video Section -->
+  <div class="section">
+    <iframe width="560" height="315" 
+            src="https://www.youtube.com/embed/ydcKeFi_FQU?si=5Z1Lk2DuiK3agyLx" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin" 
+            allowfullscreen></iframe>
+  </div>
 
-  document.querySelector('.next').addEventListener('click', () => {
-    images[currentIndex].classList.remove('active');
-    currentIndex = (currentIndex + 1) % images.length;
-    images[currentIndex].classList.add('active');
-  });
-
-  document.querySelector('.prev').addEventListener('click', () => {
-    images[currentIndex].classList.remove('active');
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    images[currentIndex].classList.add('active');
-  });
-
-  // Optional auto-slide every 3 seconds
-  setInterval(() => {
-    document.querySelector('.next').click();
-  }, 3000);
-</script>
+  <script>
+    // Listen for height messages from the carousel iframe
+    window.addEventListener("message", function(event) {
+      if (event.data.type === "setHeight") {
+        document.getElementById("carouselFrame").style.height = event.data.height + "px";
+      }
+    });
+  </script>
 
 </body>
 </html>
